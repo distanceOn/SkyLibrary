@@ -20,7 +20,7 @@ app.get("/users", (req, res) => {
 });
 
 app.get("/users/:user_id", (req, res) => {
-  const userId = parseInt(req.params.user_id);
+  const userId = req.params.user_id;
   fs.readFile(usersFilePath, (err, data) => {
     if (err) {
       res.sendStatus(500);
@@ -76,6 +76,34 @@ app.delete("/users/:user_id", (req, res) => {
             res.sendStatus(204);
           }
         });
+      } else {
+        res.sendStatus(404);
+      }
+    }
+  });
+});
+
+app.get("/books", (req, res) => {
+  fs.readFile(booksFilePath, (err, data) => {
+    if (err) {
+      res.sendStatus(500);
+    } else {
+      const books = JSON.parse(data);
+      res.json(books);
+    }
+  });
+});
+
+app.get("/books/:book_id", (req, res) => {
+  const bookId = parseInt(req.params.book_id);
+  fs.readFile(booksFilePath, (err, data) => {
+    if (err) {
+      res.sendStatus(500);
+    } else {
+      const books = JSON.parse(data);
+      const book = books.find((b) => b.id === bookId);
+      if (book) {
+        res.json(book);
       } else {
         res.sendStatus(404);
       }
