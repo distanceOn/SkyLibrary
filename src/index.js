@@ -111,6 +111,72 @@ app.get("/books/:book_id", (req, res) => {
   });
 });
 
+app.post("/users/:user_id/books/:book_id/take", (req, res) => {
+  const userId = req.params.user_id;
+  const bookId = parseInt(req.params.book_id);
+  fs.readFile(usersFilePath, (err, userData) => {
+    if (err) {
+      res.sendStatus(500);
+    } else {
+      fs.readFile(booksFilePath, (err, bookData) => {
+        if (err) {
+          res.sendStatus(500);
+        } else {
+          let users = JSON.parse(userData);
+          let books = JSON.parse(bookData);
+          const userIndex = users.findIndex((u) => u.id === userId);
+          const bookIndex = books.findIndex((b) => b.id === bookId);
+          if (userIndex !== -1 && bookIndex !== -1) {
+            const user = users[userIndex];
+            const book = books[bookIndex];
+            if (!user.books.find((b) => b.id === book.id)) {
+              user.books.push(book);
+              fs.writeFile(usersFilePath, JSON.stringify(users), (err) => {
+                if (err) {
+                  res.sendStatus(500);
+                } else {
+                  res.sendStatus(200);
+                }
+              });
+            } else {
+              res.sendStatus(400); // Книга уже взята пользователем
+            }
+          } else {
+            res.sendStatus(404); // Пользователь или книга не найдены
+          }
+        }
+      });
+    }
+  });
+});
+
+app.post("/users/:user_id/books/:book_id/return", (req, res) => {
+  const userId = req.params.user_id;
+  const bookId = parseInt(req.params.book_id);
+
+  fs.readFile(usersFilePath, (err, userData) => {
+    if (err) {
+      res.sendStatus(500);
+    } else {
+      let users = JSON.parse(userData);
+      const userIndex = users.findIndex((u) => u.id === userId);
+      const user = users[userIndex];
+      if (user.books.find((b) => parseInt(b.id) === bookId)) {
+        user.books = user.books.filter((b) => b.id !== bookId);
+        fs.writeFile(usersFilePath, JSON.stringify(users), (err) => {
+          if (err) {
+            res.sendStatus(500);
+          } else {
+            res.sendStatus(204);
+          }
+        });
+      } else {
+        res.sendStatus(404);
+      }
+    }
+  });
+});
+
 app.listen(3000, () => {
   console.log("Сервер запущен по адресу http://localhost:3000");
 });
