@@ -111,7 +111,7 @@ app.get("/books/:book_id", (req, res) => {
   });
 });
 
-app.post("/users/:user_id/books/:book_id/take", (req, res) => {
+app.post("/users/:user_id/books/:book_id/taking", (req, res) => {
   const userId = req.params.user_id;
   const bookId = parseInt(req.params.book_id);
   fs.readFile(usersFilePath, (err, userData) => {
@@ -167,7 +167,7 @@ app.post("/users/:user_id/books/:book_id/return", (req, res) => {
           if (err) {
             res.sendStatus(500);
           } else {
-            res.status(204).send("Успешно отдано!");
+            res.sendStatus(204);
           }
         });
       } else {
