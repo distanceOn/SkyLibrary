@@ -30,7 +30,7 @@ app.get("/users/:user_id", (req, res) => {
       if (user) {
         res.json(user);
       } else {
-        res.sendStatus(404);
+        res.status(404).send("Пользователя не существует");
       }
     }
   });
@@ -73,11 +73,11 @@ app.delete("/users/:user_id", (req, res) => {
           if (err) {
             res.sendStatus(500);
           } else {
-            res.sendStatus(204);
+            res.status(204).send("Пользователь удален");
           }
         });
       } else {
-        res.sendStatus(404);
+        res.status(404).send("Пользователя не существует");
       }
     }
   });
@@ -105,7 +105,7 @@ app.get("/books/:book_id", (req, res) => {
       if (book) {
         res.json(book);
       } else {
-        res.sendStatus(404);
+        res.status(404).send("Такой книги нет");
       }
     }
   });
@@ -135,14 +135,14 @@ app.post("/users/:user_id/books/:book_id/take", (req, res) => {
                 if (err) {
                   res.sendStatus(500);
                 } else {
-                  res.sendStatus(200);
+                  res.status(200).send("Успешно взято!");
                 }
               });
             } else {
-              res.sendStatus(400); // Книга уже взята пользователем
+              res.status(400).send("Книга уже взята пользователем");
             }
           } else {
-            res.sendStatus(404); // Пользователь или книга не найдены
+            res.status(404).send("Пользователь или книга не найдены");
           }
         }
       });
@@ -167,11 +167,11 @@ app.post("/users/:user_id/books/:book_id/return", (req, res) => {
           if (err) {
             res.sendStatus(500);
           } else {
-            res.sendStatus(204);
+            res.status(204).send("Успешно отдано!");
           }
         });
       } else {
-        res.sendStatus(404);
+        res.status(404).send("Пользователь или книга не найдены");
       }
     }
   });
