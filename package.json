@@ -19,6 +19,10 @@
   },
   "homepage": "https://github.com/distanceOn/SkyLibrary#readme",
   "devDependencies": {
+    "@types/express": "^4.17.17",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "nodemon": "^2.0.22",
     "uuid": "^9.0.0"
