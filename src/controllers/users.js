@@ -36,13 +36,28 @@ const getUser = (req, res) => {
 };
 
 const createUser = (req, res) => {
-  const { name } = req.body;
+  const { name, surname, username } = req.body;
+
+  if (
+    typeof name !== "string" ||
+    typeof surname !== "string" ||
+    typeof username !== "string"
+  ) {
+    res.status(400).send("Некорректные данные пользователя");
+    return;
+  }
+
+  if (name.length < 2 || surname.length < 2 || username.length < 5) {
+    res.status(400).send("Некорректные данные пользователя");
+    return;
+  }
+
   fs.readFile(usersFilePath, (err, data) => {
     if (err) {
       res.sendStatus(500);
     } else {
       const users = JSON.parse(data);
-      const newUser = { id: uuidv4(), name, books: [] };
+      const newUser = { id: uuidv4(), name, surname, username, books: [] };
       users.push(newUser);
       fs.writeFile(usersFilePath, JSON.stringify(users), (err) => {
         if (err) {

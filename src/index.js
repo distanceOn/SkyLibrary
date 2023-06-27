@@ -4,6 +4,7 @@ import userRouter from "./routes/users.js";
 import bodyParser from "body-parser";
 import cors from "cors";
 import bookRouter from "./routes/books.js";
+import logOriginalUrl from "./middlewares/log.js";
 
 dotenv.config();
 const { PORT, API_URL } = process.env;
@@ -11,6 +12,7 @@ const { PORT, API_URL } = process.env;
 const app = express();
 
 app.use(cors());
+app.use(logOriginalUrl);
 app.use(bodyParser.json());
 app.use(userRouter);
 app.use(bookRouter);
